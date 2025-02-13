@@ -4,27 +4,34 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
-app.use(cors());
+
+// ✅ Fix CORS issue by allowing requests from your frontend
+app.use(cors({
+    origin: "https://quantasphere.github.io", // Allow requests from your frontend
+    methods: "GET,POST",
+    allowedHeaders: "Content-Type,Authorization"
+}));
+
 app.use(express.json());
 
 const apiKey = process.env.OPENAI_API_KEY; // Get API key from Render
 
-// ✅ Add a homepage route to prevent "Cannot GET /"
+// ✅ Homepage route (for testing)
 app.get("/", (req, res) => {
     res.send("AI Connection Hub Backend is Running! 🚀");
 });
 
-// ✅ Main AI chat route
+// ✅ OpenAI Chat Route
 app.post('/chat', async (req, res) => {
     try {
         const userMessage = req.body.message;
 
         if (!apiKey) {
-            console.error("Error: Missing OpenAI API Key");
+            console.error("🚨 ERROR: Missing OpenAI API Key!");
             return res.status(500).json({ error: "Missing API Key" });
         }
 
-        console.log("Sending request to OpenAI with message:", userMessage);
+        console.log("📩 Sending request to OpenAI with message:", userMessage);
 
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
@@ -40,16 +47,16 @@ app.post('/chat', async (req, res) => {
         });
 
         const data = await response.json();
-        console.log("OpenAI Response:", data);
+        console.log("📩 OpenAI Response:", JSON.stringify(data, null, 2));
 
         if (!data.choices) {
-            console.error("Error: OpenAI response invalid", data);
+            console.error("🚨 ERROR: OpenAI response invalid", data);
             return res.status(500).json({ error: "Invalid OpenAI response" });
         }
 
         res.json({ response: data.choices[0].message.content });
     } catch (error) {
-        console.error("Error Fetching OpenAI:", error);
+        console.error("🚨 ERROR Fetching OpenAI:", error);
         res.status(500).json({ error: "Failed to fetch AI response" });
     }
 });
