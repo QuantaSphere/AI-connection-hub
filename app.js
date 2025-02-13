@@ -3,7 +3,10 @@ const express = require('express');
 const app = express();
 
 app.use(cors({
-    origin: "https://lambent-cendol-123456.netlify.app", // Allow only Netlify
+    origin: [
+        "https://quantasphere.github.io",
+        "https://lambent-cendol-123456.netlify.app"
+    ],
     methods: "GET, POST, OPTIONS",
     allowedHeaders: "Content-Type, Authorization"
 }));
