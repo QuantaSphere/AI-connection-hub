@@ -1,4 +1,4 @@
-const apiKey = "YOUR_OPENAI_API_KEY_HERE"; // Do NOT hardcode API keys!
+const apiKey = "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"; // Do NOT hardcode API keys!
 
 
 async function getAIResponse(userMessage) {
