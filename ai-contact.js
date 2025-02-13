@@ -1,5 +1,5 @@
 async function getAIResponse(userMessage) {
-    const response = await fetch("https://your-backend-url.com/chat", { // Use your deployed backend URL
+    const response = await fetch("https://ai-connection-hub.onrender.com/chat", { // ✅ Use the correct Render backend URL
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage })
@@ -25,7 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
         chatMessages.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
         userInput.value = "";
 
-        const aiResponse = await getAIResponse(userMessage);
-        chatMessages.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
+        try {
+            const aiResponse = await getAIResponse(userMessage);
+            chatMessages.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
+        } catch (error) {
+            console.error("Error fetching AI response:", error);
+            chatMessages.innerHTML += `<p><strong>AI:</strong> Error fetching response. Try again later.</p>`;
+        }
     });
 });
