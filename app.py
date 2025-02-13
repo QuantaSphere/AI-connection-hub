@@ -4,7 +4,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # Allow all origins (for debugging, change later)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": [
+    "https://lambent-cendol-123456.netlify.app",
+    "https://quantasphere.github.io"
+]}})
+ 
 
 @app.route("/chat", methods=["POST"])
 def chat():
