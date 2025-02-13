@@ -1,24 +1,12 @@
-require('dotenv').config(); // Load environment variables
-
-const apiKey = process.env.OPENAI_API_KEY; // Read key from .env
-
-
 async function getAIResponse(userMessage) {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://your-backend-url.com/chat", { // Use your deployed backend URL
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-            model: "gpt-4",
-            messages: [{ role: "user", content: userMessage }],
-            max_tokens: 100
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
     });
 
     const data = await response.json();
-    return data.choices[0].message.content;
+    return data.response;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
