@@ -1,4 +1,6 @@
-const apiKey = "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"; // Do NOT hardcode API keys!
+require('dotenv').config(); // Load environment variables
+
+const apiKey = process.env.OPENAI_API_KEY; // Read key from .env
 
 
 async function getAIResponse(userMessage) {
