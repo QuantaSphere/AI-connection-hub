@@ -5,18 +5,26 @@ const fetch = require('node-fetch');
 
 const app = express();
 
-// ✅ Fix CORS issue by allowing requests from your frontend
+// ✅ Fix CORS issue by explicitly allowing your frontend URL
 app.use(cors({
-    origin: "https://quantasphere.github.io", // Allow requests from your frontend
-    methods: "GET,POST",
+    origin: ["https://quantasphere.github.io"], // Allow only this frontend
+    methods: "GET,POST,OPTIONS",
     allowedHeaders: "Content-Type,Authorization"
 }));
 
+// ✅ Add manual CORS headers for preflight requests
+app.options('*', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://quantasphere.github.io');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(200);
+});
+
 app.use(express.json());
 
-const apiKey = process.env.OPENAI_API_KEY; // Get API key from Render
+const apiKey = process.env.OPENAI_API_KEY;
 
-// ✅ Homepage route (for testing)
+// ✅ Homepage route
 app.get("/", (req, res) => {
     res.send("AI Connection Hub Backend is Running! 🚀");
 });
