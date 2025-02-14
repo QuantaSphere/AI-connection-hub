@@ -5,7 +5,6 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 const { OpenAI } = require('openai');
 
-// ✅ Initialize Express
 const app = express();
 
 app.use(cors({
@@ -22,12 +21,7 @@ app.use(express.json());
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY;
 
-// ✅ Initialize OpenAI
-const openai = new OpenAI({
-    apiKey: OPENAI_API_KEY
-});
-
-// ✅ AI Chat API Route
+// ✅ OpenAI Chat API Route
 app.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
@@ -46,8 +40,8 @@ app.post("/netlify-chat", async (req, res) => {
     }
 });
 
-// ✅ HubSpot Lead API Route
-app.post("/hubspot-lead", async (req, res) => {
+// ✅ HubSpot API Route
+app.post("/hubspot", async (req, res) => {
     try {
         const { email, firstName, lastName } = req.body;
 
@@ -75,8 +69,8 @@ app.post("/hubspot-lead", async (req, res) => {
         console.log("🚨 Raw HubSpot Response:", rawResponse);
 
         if (!rawResponse) {
-            console.error("🚨 HubSpot API returned empty response");
-            return res.status(500).json({ error: "HubSpot API returned empty response" });
+            console.error("🚨 HubSpot API returned an empty response");
+            return res.status(500).json({ error: "HubSpot API returned an empty response" });
         }
 
         const data = JSON.parse(rawResponse);
@@ -94,10 +88,10 @@ app.post("/hubspot-lead", async (req, res) => {
     }
 });
 
-// ✅ Debug Route
+// ✅ Debug Route (To check if API is running)
 app.get("/", (req, res) => {
     res.json({ message: "✅ Netlify function is running!" });
 });
 
-// ✅ Export for Netlify Functions (Ensuring `app` is defined)
+// ✅ Export for Netlify Functions
 module.exports.handler = serverless(app);
