@@ -22,17 +22,24 @@
 
     // Create a script element to load the correct AI script
     const script = document.createElement("script");
-
-    // Load Netlify AI script if on Netlify, otherwise load Render AI script
     script.src = isNetlify ? "ai-contact-netlify.js" : "ai-contact.js";
     script.type = "text/javascript";
     script.defer = true;
 
-    // Append the script to the body
-    document.body.appendChild(script);
+    // Attach event listener after script loads
+    script.onload = function () {
+        console.log(`✅ Loaded AI script: ${script.src}`);
+        if (typeof initChat !== "undefined") {
+            initChat(); // ✅ Call initialization function after script loads
+        } else {
+            console.error("❌ AI chat script loaded, but initChat() is missing.");
+        }
+    };
 
-    console.log(`✅ Loaded AI script: ${script.src}`);
+    // Append script to the body
+    document.body.appendChild(script);
 </script>
+
 
 </body>
 </html>
