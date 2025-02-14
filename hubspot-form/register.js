@@ -1,4 +1,3 @@
-
 document.getElementById("hubspotForm").addEventListener("submit", async function(event) {
     event.preventDefault(); // Prevent default form submission
 
@@ -7,7 +6,7 @@ document.getElementById("hubspotForm").addEventListener("submit", async function
     const message = document.getElementById("message").value;
 
     try {
-        const response = await fetch("/.netlify/functions/hubspot", { // ✅ Calls Netlify Function
+        const response = await fetch("/.netlify/functions/hubspot", { // ✅ Calls Netlify function
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, message })
