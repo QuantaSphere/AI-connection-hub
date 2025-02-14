@@ -1,18 +1,17 @@
 {
   "name": "my-project",
-  "version": "1.0.0",  
+  "version": "1.0.0",
   "description": "AI Connection Hub",
   "main": "index.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-  "cors": "^2.8.5",
-  "dotenv": "^16.0.3",
-  "express": "^4.17.1",
-  "node-fetch": "^2.6.1"
-}
-
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  },
   "devDependencies": {},
   "license": "MIT"
 }
