@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm --prefix client run build",
-    "build": "react-scripts build"
+    "build": "npm --prefix client run build"
+    
   },
   "dependencies": {
     "cors": "^2.8.5",
