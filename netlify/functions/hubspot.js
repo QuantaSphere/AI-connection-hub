@@ -7,14 +7,14 @@ exports.handler = async (event) => {
             return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
         }
 
-        const { name, email, message } = JSON.parse(event.body || "{}"); // ✅ Ensure event.body is parsed correctly
+        const { name, email, message } = JSON.parse(event.body || "{}");
 
         if (!name || !email || !message) {
             return { statusCode: 400, body: JSON.stringify({ error: "Missing required fields: name, email, message" }) };
         }
 
         const HUBSPOT_API_URL = "https://api.hubapi.com/crm/v3/objects/contacts";
-        const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY; // ✅ Secure API Key from Netlify
+        const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY; // ✅ Secure API Key
 
         if (!HUBSPOT_API_KEY) {
             console.error("❌ HubSpot API Key Missing!");
@@ -29,9 +29,12 @@ exports.handler = async (event) => {
             }
         };
 
-        const response = await fetch(`${HUBSPOT_API_URL}?hapikey=${HUBSPOT_API_KEY}`, {
+        const response = await fetch(HUBSPOT_API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${HUBSPOT_API_KEY}` // ✅ Correct Bearer Token Authorization
+            },
             body: JSON.stringify(data)
         });
 
