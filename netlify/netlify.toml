@@ -1,13 +1,19 @@
 [build]
   command = "npm install && npm run build"  # ✅ Ensures full build process
   functions = "netlify/functions"
+  publish = "/"  # ✅ Ensures all files in root directory are deployed
 
 [functions]
-  node_bundler = "esbuild"  # ✅ Keep this for optimized function bundling
+  node_bundler = "esbuild"  # ✅ Optimized function bundling
   included_files = ["netlify/functions/hubspot.js"]  # ✅ Ensures hubspot.js is deployed
   environment = { HUBSPOT_API_KEY = "HUBSPOT_API_KEY" }  # ✅ Ensure HubSpot API key is available in Netlify functions
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
