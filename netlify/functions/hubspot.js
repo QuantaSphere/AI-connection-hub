@@ -1,43 +1,46 @@
-require("dotenv").config();
-const fetch = require("node-fetch");
-
-exports.handler = async (event) => {
+app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
     try {
-        const { name, email, message } = JSON.parse(event.body);
-        const HUBSPOT_API_URL = "https://api.hubapi.com/crm/v3/objects/contacts";
-        const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY; // ✅ Secure access in backend
+        const { email, firstName, lastName } = req.body;
 
-        if (!HUBSPOT_API_KEY) {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: "Missing HubSpot API Key" }),
-            };
+        // ✅ Check if email is provided
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
         }
 
-        const data = {
-            properties: {
-                "email": email,
-                "firstname": name,
-                "message": message
-            }
-        };
-
-        const response = await fetch(`${HUBSPOT_API_URL}?hapikey=${HUBSPOT_API_KEY}`, {
+        const hubspotResponse = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            headers: {
+                "Authorization": `Bearer ${HUBSPOT_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                properties: {
+                    email: email,
+                    firstname: firstName || "",
+                    lastname: lastName || ""
+                }
+            })
         });
 
-        const result = await response.json();
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ success: true, hubspotResponse: result }),
-        };
+        // ✅ Check if response is OK before parsing
+        if (!hubspotResponse.ok) {
+            const errorText = await hubspotResponse.text(); // Read as text if JSON fails
+            console.error("🚨 HubSpot API Error:", errorText);
+            return res.status(500).json({ error: "HubSpot API request failed", details: errorText });
+        }
+
+        // ✅ Parse JSON safely
+        const data = await hubspotResponse.json().catch(() => null);
+
+        if (!data) {
+            console.error("🚨 HubSpot API returned empty response");
+            return res.status(500).json({ error: "HubSpot API returned empty response" });
+        }
+
+        res.json({ message: "Lead added successfully!", data });
+
     } catch (error) {
-        console.error("❌ Error in Netlify HubSpot Function:", error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: "Failed to send data to HubSpot" }),
-        };
+        console.error("🚨 HubSpot API Error:", error);
+        res.status(500).json({ error: "Failed to send data to HubSpot", details: error.message });
     }
-};
+});
