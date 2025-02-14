@@ -1,28 +1,28 @@
 require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
-const serverless = require('serverless-http'); // ✅ Required for Netlify
+const serverless = require('serverless-http');
 const { OpenAI } = require('openai');
 
 const app = express();
 
-// ✅ Apply CORS middleware
-app.use(cors({ 
+// ✅ CORS Configuration
+app.use(cors({
     origin: [
-        "https://quantasphere.github.io", 
+        "https://quantasphere.github.io",
         "https://quantasphere.netlify.app"
-    ], 
+    ],
     methods: "GET, POST"
 }));
 
 app.use(express.json());
 
-// ✅ Ensure OpenAI API Key is loaded
+// ✅ Ensure OpenAI API Key is Loaded
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-// ✅ POST route for AI Chat
+// ✅ API Route for AI Chat
 app.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
@@ -34,7 +34,6 @@ app.post("/netlify-chat", async (req, res) => {
             temperature: 0.7
         });
 
-        // ✅ Return AI's response
         res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
@@ -43,5 +42,5 @@ app.post("/netlify-chat", async (req, res) => {
     }
 });
 
-// ✅ Required for Netlify Function
+// ✅ Required for Netlify Function Deployment
 module.exports.handler = serverless(app);
