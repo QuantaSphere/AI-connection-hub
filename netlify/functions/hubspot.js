@@ -3,11 +3,16 @@ const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
     try {
-        if (!event.body) {
-            return { statusCode: 400, body: JSON.stringify({ error: "Missing request body" }) };
+        if (event.httpMethod !== "POST") {
+            return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
         }
 
-        const { name, email, message } = JSON.parse(event.body);
+        const { name, email, message } = JSON.parse(event.body || "{}"); // ✅ Ensure event.body is parsed correctly
+
+        if (!name || !email || !message) {
+            return { statusCode: 400, body: JSON.stringify({ error: "Missing required fields: name, email, message" }) };
+        }
+
         const HUBSPOT_API_URL = "https://api.hubapi.com/crm/v3/objects/contacts";
         const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY; // ✅ Secure API Key from Netlify
 
