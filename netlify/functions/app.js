@@ -1,12 +1,12 @@
-require('dotenv').config();  // Load environment variables
+require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const serverless = require('serverless-http');
-const fetch = require('node-fetch');
-const cors = require('cors');
 const { OpenAI } = require('openai');
 
 const app = express();
 
+// ✅ Apply CORS
 app.use(cors({
     origin: [
         "https://quantasphere.github.io",
@@ -17,20 +17,25 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Load API keys from Netlify environment variables
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY;
-
-// ✅ Initialize OpenAI
+// ✅ Ensure OpenAI API Key is loaded
 const openai = new OpenAI({
-    apiKey: OPENAI_API_KEY
+    apiKey: process.env.OPENAI_API_KEY
 });
 
-// ✅ OpenAI Chat API Route
-app.post("/netlify-chat", async (req, res) => {
+// ✅ Define Router (Required for Netlify)
+const router = express.Router();
+
+// ✅ Debugging Route (Check if Function Works)
+router.get("/", (req, res) => {
+    res.json({ message: "✅ Netlify function is running!" });
+});
+
+// ✅ AI Chat Route
+router.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
 
+        // ✅ Call OpenAI API
         const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [{ role: "user", content: userMessage }],
@@ -40,63 +45,13 @@ app.post("/netlify-chat", async (req, res) => {
         res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
-        console.error("🚨 OpenAI API Error:", error);
+        console.error("❌ OpenAI API Error:", error);
         res.status(500).json({ error: "Error generating AI response", details: error.message });
     }
 });
 
-// ✅ HubSpot API Route
-app.post("/hubspot", async (req, res) => {
-    try {
-        const { email, firstName, lastName } = req.body;
+// ✅ Fix: Use `/.netlify/functions/app` to match Netlify's expected path
+app.use("/.netlify/functions/app", router);
 
-        if (!email) {
-            return res.status(400).json({ error: "Email is required" });
-        }
-
-        const hubspotResponse = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${HUBSPOT_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                properties: {
-                    email: email,
-                    firstname: firstName || "",
-                    lastname: lastName || ""
-                }
-            })
-        });
-
-        // ✅ Log raw response
-        const rawResponse = await hubspotResponse.text();
-        console.log("🚨 Raw HubSpot Response:", rawResponse);
-
-        if (!rawResponse) {
-            console.error("🚨 HubSpot API returned an empty response");
-            return res.status(500).json({ error: "HubSpot API returned an empty response" });
-        }
-
-        const data = JSON.parse(rawResponse);
-
-        if (!hubspotResponse.ok) {
-            console.error("🚨 HubSpot API Error:", data);
-            return res.status(500).json({ error: "HubSpot API request failed", details: data });
-        }
-
-        res.json({ message: "Lead added successfully!", data });
-
-    } catch (error) {
-        console.error("🚨 HubSpot API Error:", error);
-        res.status(500).json({ error: "Failed to send data to HubSpot", details: error.message });
-    }
-});
-
-// ✅ Debug Route (To check if API is running)
-app.get("/", (req, res) => {
-    res.json({ message: "✅ Netlify function is running!" });
-});
-
-// ✅ Export for Netlify Functions
+// ✅ Export as Netlify Function
 module.exports.handler = serverless(app);
