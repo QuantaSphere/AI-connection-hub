@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
@@ -8,7 +7,7 @@ const app = express();
 app.use(cors({ 
     origin: [
         "https://quantasphere.github.io", 
-        "https://lambent-cendol-123456.netlify.app"
+        "https://quantaspherenetlifyapp.netlify.app"
     ], 
     methods: "GET, POST"
 }));
@@ -48,16 +47,3 @@ app.get("/", (req, res) => {
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-=======
-const cors = require('cors');
-const express = require('express');
-const app = express();
-
-app.use(cors({
-    origin: "https://lambent-cendol-123456.netlify.app", // Allow only Netlify
-    methods: "GET, POST, OPTIONS",
-    allowedHeaders: "Content-Type, Authorization"
-}));
-
-app.listen(5000, () => console.log("Server running on port 5000"));
->>>>>>> 4b0c7d3 (Pushing latest local changes)
