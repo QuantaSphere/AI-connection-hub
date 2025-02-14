@@ -10,7 +10,8 @@ exports.handler = async function(event) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer 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"
+                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+
             },
             body: JSON.stringify({
                 model: "gpt-4",
