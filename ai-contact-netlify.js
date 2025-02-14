@@ -43,4 +43,13 @@ function initChat() {
             chatMessages.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
         } catch (error) {
             console.error("Error fetching AI response:", error);
-            chatMessages.innerHTML += `<p><stron
+            chatMessages.innerHTML += `<p><strong>AI:</strong> Error fetching response. Try again later.</p>`;
+        }
+    });
+}
+
+// ✅ Ensure `initChat()` is globally available
+window.initChat = initChat;
+
+// ✅ Auto-run `initChat()` after script loads
+initChat(); 
