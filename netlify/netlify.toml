@@ -4,6 +4,8 @@
 
 [functions]
   node_bundler = "esbuild"  # ✅ Keep this for optimized function bundling
+  included_files = ["netlify/functions/hubspot.js"]  # ✅ Ensures hubspot.js is deployed
+  environment = { HUBSPOT_API_KEY = "HUBSPOT_API_KEY" }  # ✅ Ensure HubSpot API key is available in Netlify functions
 
 [[redirects]]
   from = "/api/*"
