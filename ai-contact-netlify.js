@@ -1,5 +1,5 @@
 async function getAIResponse(userMessage) {
-    const API_URL = "https://quantasphere.netlify.app/.netlify/functions/app/netlify-chat"; // ✅ Netlify API
+    const API_URL = "https://quantasphere.netlify.app/.netlify/functions/app/netlify-chat";
 
     try {
         const response = await fetch(API_URL, {
@@ -20,7 +20,9 @@ async function getAIResponse(userMessage) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+// ✅ Ensure `initChat()` is defined
+function initChat() {
+    console.log("✅ AI Chat script initialized.");
     const chatButton = document.getElementById("openChat");
     const chatBox = document.getElementById("chatBox");
     const userInput = document.getElementById("userInput");
@@ -41,7 +43,4 @@ document.addEventListener("DOMContentLoaded", function () {
             chatMessages.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
         } catch (error) {
             console.error("Error fetching AI response:", error);
-            chatMessages.innerHTML += `<p><strong>AI:</strong> Error fetching response. Try again later.</p>`;
-        }
-    });
-});
+            chatMessages.innerHTML += `<p><stron
