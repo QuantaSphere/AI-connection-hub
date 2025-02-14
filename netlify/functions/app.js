@@ -22,9 +22,15 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-// ✅ Define Router (This is REQUIRED for Netlify)
+// ✅ Define Router (Required for Netlify)
 const router = express.Router();
 
+// ✅ Debugging Route (Check if Function Works)
+router.get("/", (req, res) => {
+    res.json({ message: "✅ Netlify function is running!" });
+});
+
+// ✅ AI Chat Route
 router.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
@@ -39,13 +45,13 @@ router.post("/netlify-chat", async (req, res) => {
         res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
-        console.error("Error calling OpenAI API:", error);
+        console.error("❌ OpenAI API Error:", error);
         res.status(500).json({ error: "Error generating AI response", details: error.message });
     }
 });
 
-// ✅ Use Router
-app.use("/", router);  // REQUIRED for Netlify!
+// ✅ Fix: Use `/.netlify/functions/app` to match Netlify's expected path
+app.use("/.netlify/functions/app", router);
 
 // ✅ Export as Netlify Function
 module.exports.handler = serverless(app);
