@@ -16,30 +16,6 @@
         <button id="sendMessage">Send</button>
     </div>
 
-    <script>
-    // Detect if the site is on Netlify or another platform
-    const isNetlify = window.location.hostname.includes("netlify.app");
-
-    // Create a script element to load the correct AI script
-    const script = document.createElement("script");
-    script.src = isNetlify ? "ai-contact-netlify.js" : "ai-contact.js";
-    script.type = "text/javascript";
-    script.defer = true;
-
-    // Attach event listener after script loads
-    script.onload = function () {
-        console.log(`✅ Loaded AI script: ${script.src}`);
-        if (typeof initChat !== "undefined") {
-            initChat(); // ✅ Call initialization function after script loads
-        } else {
-            console.error("❌ AI chat script loaded, but initChat() is missing.");
-        }
-    };
-
-    // Append script to the body
-    document.body.appendChild(script);
-</script>
-
-
+    <script src="ai-contact.js"></script>
 </body>
 </html>
