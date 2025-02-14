@@ -1,6 +1,7 @@
-const fetch = require('node-fetch');
+// app.js (inside netlify/functions/)
+const fetch = require("node-fetch");
 
-exports.handler = async function (event, context) {
+exports.handler = async function(event) {
     try {
         const body = JSON.parse(event.body);
         const userMessage = body.message;
@@ -24,9 +25,10 @@ exports.handler = async function (event, context) {
             body: JSON.stringify({ response: data.choices[0].message.content })
         };
     } catch (error) {
+        console.error("Error:", error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: "Internal Server Error", details: error.message })
+            body: JSON.stringify({ error: "Internal Server Error" })
         };
     }
 };
