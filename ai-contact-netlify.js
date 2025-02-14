@@ -20,10 +20,10 @@ async function getAIResponse(userMessage) {
     }
 }
 
-// ✅ HubSpot API Integration for Lead Collection
+// ✅ HubSpot API Integration (ONLY for registration, NOT in chat)
 async function sendToHubSpot(name, email, message) {
     try {
-        const response = await fetch("/.netlify/functions/hubspot", { // ✅ Calls Netlify function instead
+        const response = await fetch("/.netlify/functions/hubspot", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, message })
@@ -39,7 +39,7 @@ async function sendToHubSpot(name, email, message) {
         return result;
     } catch (error) {
         console.error("❌ Error sending data to HubSpot:", error);
-        return null; // Returning null to handle errors better
+        return null;
     }
 }
 
@@ -66,21 +66,6 @@ function initChat() {
         try {
             const aiResponse = await getAIResponse(userMessage);
             chatMessages.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
-
-            // ✅ Ask for user details only AFTER AI response is shown
-            setTimeout(async () => {
-                const userName = prompt("Enter your name:");
-                const userEmail = prompt("Enter your email:");
-
-                if (userName && userEmail) {
-                    const hubspotResponse = await sendToHubSpot(userName, userEmail, userMessage);
-                    if (hubspotResponse) {
-                        chatMessages.innerHTML += `<p><strong>AI:</strong> Thank you, ${userName}. I'll save this for future reference!</p>`;
-                    } else {
-                        chatMessages.innerHTML += `<p><strong>AI:</strong> Sorry, I couldn't save your info. Please try again later.</p>`;
-                    }
-                }
-            }, 1000); // Delay prompts to avoid UI blocking
         } catch (error) {
             console.error("Error fetching AI response:", error);
             chatMessages.innerHTML += `<p><strong>AI:</strong> Error fetching response. Try again later.</p>`;
