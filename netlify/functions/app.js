@@ -25,8 +25,8 @@ const openai = new OpenAI({
     apiKey: OPENAI_API_KEY
 });
 
-// ✅ AI Chat API Route (Handles AI Conversations)
-app.post("/.netlify/functions/app/netlify-chat", async (req, res) => {
+// ✅ AI Chat API Route
+app.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
 
@@ -44,12 +44,11 @@ app.post("/.netlify/functions/app/netlify-chat", async (req, res) => {
     }
 });
 
-// ✅ HubSpot Lead API Route (Handles Lead Capturing)
-app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
+// ✅ HubSpot Lead API Route
+app.post("/hubspot-lead", async (req, res) => {
     try {
         const { email, firstName, lastName } = req.body;
 
-        // ✅ Check if email is provided
         if (!email) {
             return res.status(400).json({ error: "Email is required" });
         }
@@ -73,16 +72,13 @@ app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
         const rawResponse = await hubspotResponse.text();
         console.log("🚨 Raw HubSpot Response:", rawResponse);
 
-        // ✅ If response is empty, return an error
         if (!rawResponse) {
-            console.error("🚨 HubSpot API returned an empty response");
-            return res.status(500).json({ error: "HubSpot API returned an empty response" });
+            console.error("🚨 HubSpot API returned empty response");
+            return res.status(500).json({ error: "HubSpot API returned empty response" });
         }
 
-        // ✅ Try parsing JSON safely
         const data = JSON.parse(rawResponse);
 
-        // ✅ If the API request was unsuccessful, return the error message
         if (!hubspotResponse.ok) {
             console.error("🚨 HubSpot API Error:", data);
             return res.status(500).json({ error: "HubSpot API request failed", details: data });
@@ -96,8 +92,8 @@ app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
     }
 });
 
-// ✅ Debug Route (To check if API is working)
-app.get("/.netlify/functions/app", (req, res) => {
+// ✅ Debug Route
+app.get("/", (req, res) => {
     res.json({ message: "✅ Netlify function is running!" });
 });
 
