@@ -6,7 +6,7 @@ exports.handler = async function(event) {
         const body = JSON.parse(event.body);
         const userMessage = body.message;
 
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        const response = await fetch("https://lambent-cendol-123456.netlify.app/.netlify/functions/app", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
