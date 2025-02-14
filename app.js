@@ -7,7 +7,7 @@ const app = express();
 app.use(cors({ 
     origin: [
         "https://quantasphere.github.io", 
-        "https://lambent-cendol-123456.netlify.app"
+        "https://quantaspherenetlifyapp.netlify.app"
     ], 
     methods: "GET, POST"
 }));
