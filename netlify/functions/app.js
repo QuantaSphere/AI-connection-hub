@@ -21,6 +21,11 @@ app.use(express.json());
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY;
 
+// ✅ Initialize OpenAI
+const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY
+});
+
 // ✅ OpenAI Chat API Route
 app.post("/netlify-chat", async (req, res) => {
     try {
