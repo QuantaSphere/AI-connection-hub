@@ -1,30 +1,27 @@
-const { OpenAI } = require("openai");
+require('dotenv').config();
+const cors = require('cors');
+const express = require('express');
+const { OpenAI } = require('openai');
 
+const app = express();
+app.use(cors({ 
+    origin: [
+        "https://quantasphere.github.io", 
+        "https://quantaspherenetlifyapp.netlify.app"
+    ], 
+    methods: "GET, POST"
+}));
+app.use(express.json());
+
+// ✅ Ensure OpenAI API Key is loaded
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY // ✅ Loaded from Netlify Environment Variables
+    apiKey: process.env.OPENAI_API_KEY
 });
 
-exports.handler = async (event) => {
+// ✅ Correct POST route for Netlify
+app.post("/netlify-chat", async (req, res) => {
     try {
-        // ✅ Allow CORS for your frontend
-        const headers = {
-            "Access-Control-Allow-Origin": "*", // Adjust if needed
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type",
-        };
-
-        // ✅ Handle preflight OPTIONS request
-        if (event.httpMethod === "OPTIONS") {
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ message: "CORS preflight successful" }),
-            };
-        }
-
-        // ✅ Parse incoming request body
-        const body = JSON.parse(event.body);
-        const userMessage = body.message || "No message received";
+        const userMessage = req.body.message || "No message received";
 
         // ✅ Call OpenAI API
         const response = await openai.chat.completions.create({
@@ -33,17 +30,20 @@ exports.handler = async (event) => {
             temperature: 0.7
         });
 
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify({ response: response.choices[0].message.content }),
-        };
+        // ✅ Return AI's response
+        res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
         console.error("Error calling OpenAI API:", error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: "Error generating AI response", details: error.message }),
-        };
+        res.status(500).json({ error: "Error generating AI response", details: error.message });
     }
-};
+});
+
+// Debug Route
+app.get("/", (req, res) => {
+    res.json({ message: "API is running! Use POST /netlify-chat to chat with AI." });
+});
+
+// Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
