@@ -1,4 +1,5 @@
 {
+
   "name": "ai-backend",
   "version": "1.0.0",
   "description": "Backend for OpenAI chatbot",
@@ -11,5 +12,12 @@
     "dotenv": "^16.0.3",
     "cors": "^2.8.5",
     "node-fetch": "^2.6.1"
+
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2"
+
   }
 }
