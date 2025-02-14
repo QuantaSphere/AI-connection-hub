@@ -45,7 +45,7 @@ router.post("/netlify-chat", async (req, res) => {
 });
 
 // ✅ Use Router
-app.use("/.netlify/functions/app", router);  // REQUIRED for Netlify!
+app.use("/", router);  // REQUIRED for Netlify!
 
 // ✅ Export as Netlify Function
 module.exports.handler = serverless(app);
