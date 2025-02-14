@@ -1,3 +1,4 @@
+const apiKey = process.env.OPENAI_API_KEY;
 async function getAIResponse(userMessage) {
     const response = await fetch("https://ai-connection-hub.onrender.com/netifly-chat", { // ✅ Use the correct Render backend URL
         method: "POST",
