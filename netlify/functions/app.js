@@ -6,7 +6,7 @@ const { OpenAI } = require('openai');
 
 const app = express();
 
-// ✅ CORS Configuration
+// ✅ Apply CORS
 app.use(cors({
     origin: [
         "https://quantasphere.github.io",
@@ -17,13 +17,15 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Ensure OpenAI API Key is Loaded
+// ✅ Ensure OpenAI API Key is loaded
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-// ✅ API Route for AI Chat
-app.post("/netlify-chat", async (req, res) => {
+// ✅ Define Router (This is REQUIRED for Netlify)
+const router = express.Router();
+
+router.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
 
@@ -42,5 +44,8 @@ app.post("/netlify-chat", async (req, res) => {
     }
 });
 
-// ✅ Required for Netlify Function Deployment
+// ✅ Use Router
+app.use("/.netlify/functions/app", router);  // REQUIRED for Netlify!
+
+// ✅ Export as Netlify Function
 module.exports.handler = serverless(app);
