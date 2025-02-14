@@ -1,9 +1,9 @@
 [build]
-  command = "npm install"
+  command = "npm install && npm run build"  # ✅ Ensures full build process
   functions = "netlify/functions"
 
 [functions]
-  node_bundler = "esbuild"
+  node_bundler = "esbuild"  # ✅ Keep this for optimized function bundling
 
 [[redirects]]
   from = "/api/*"
