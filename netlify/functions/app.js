@@ -5,7 +5,8 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 const { OpenAI } = require('openai');
 
-const app = express();
+const app = express(); // ✅ Ensures app is properly initialized
+
 app.use(cors({
     origin: [
         "https://quantasphere.github.io",
@@ -68,7 +69,7 @@ app.post("/hubspot-lead", async (req, res) => {
             })
         });
 
-        // ✅ Log the raw response before parsing
+        // ✅ Log raw response
         const rawResponse = await hubspotResponse.text();
         console.log("🚨 Raw HubSpot Response:", rawResponse);
 
@@ -97,5 +98,5 @@ app.get("/", (req, res) => {
     res.json({ message: "✅ Netlify function is running!" });
 });
 
-// ✅ Export for Netlify Functions
+// ✅ Export for Netlify Functions (Ensuring `app` is defined)
 module.exports.handler = serverless(app);
