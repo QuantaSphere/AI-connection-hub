@@ -1,12 +1,11 @@
-require('dotenv').config();
-const cors = require('cors');
+require('dotenv').config();  // Load environment variables (if running locally)
 const express = require('express');
 const serverless = require('serverless-http');
+const fetch = require('node-fetch');
+const cors = require('cors');
 const { OpenAI } = require('openai');
 
 const app = express();
-
-// ✅ Apply CORS
 app.use(cors({
     origin: [
         "https://quantasphere.github.io",
@@ -17,25 +16,20 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Ensure OpenAI API Key is loaded
+// ✅ Load API keys from Netlify environment variables
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY;
+
+// ✅ Initialize OpenAI
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: OPENAI_API_KEY
 });
 
-// ✅ Define Router (Required for Netlify)
-const router = express.Router();
-
-// ✅ Debugging Route (Check if Function Works)
-router.get("/", (req, res) => {
-    res.json({ message: "✅ Netlify function is running!" });
-});
-
-// ✅ AI Chat Route
-router.post("/netlify-chat", async (req, res) => {
+// ✅ AI Chat API Route
+app.post("/.netlify/functions/app/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
 
-        // ✅ Call OpenAI API
         const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [{ role: "user", content: userMessage }],
@@ -45,13 +39,45 @@ router.post("/netlify-chat", async (req, res) => {
         res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
-        console.error("❌ OpenAI API Error:", error);
+        console.error("Error calling OpenAI API:", error);
         res.status(500).json({ error: "Error generating AI response", details: error.message });
     }
 });
 
-// ✅ Fix: Use `/.netlify/functions/app` to match Netlify's expected path
-app.use("/.netlify/functions/app", router);
+// ✅ HubSpot Lead API Route
+app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
+    try {
+        const { email, firstName, lastName } = req.body;
 
-// ✅ Export as Netlify Function
+        const response = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${HUBSPOT_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                properties: {
+                    email: email,
+                    firstname: firstName,
+                    lastname: lastName
+                }
+            })
+        });
+
+        const data = await response.json();
+        res.json({ message: "Lead added successfully!", data });
+
+    } catch (error) {
+        console.error("HubSpot API Error:", error);
+        res.status(500).json({ error: "Failed to add lead to HubSpot" });
+    }
+});
+
+// ✅ Debug Route
+app.get("/.netlify/functions/app", (req, res) => {
+    res.json({ message: "✅ Netlify function is running!" });
+});
+
+// ✅ Export for Netlify Functions
 module.exports.handler = serverless(app);
+
