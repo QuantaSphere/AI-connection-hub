@@ -1,11 +1,12 @@
-require('dotenv').config();  // Load environment variables (if running locally)
+require('dotenv').config();  // Load environment variables
 const express = require('express');
 const serverless = require('serverless-http');
 const fetch = require('node-fetch');
 const cors = require('cors');
 const { OpenAI } = require('openai');
 
-const app = express(); // ✅ Ensures app is properly initialized
+// ✅ Initialize Express
+const app = express();
 
 app.use(cors({
     origin: [
