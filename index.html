@@ -16,6 +16,23 @@
         <button id="sendMessage">Send</button>
     </div>
 
-    <script src="ai-contact.js"></script>
+    <script>
+    // Detect if the site is on Netlify or another platform
+    const isNetlify = window.location.hostname.includes("netlify.app");
+
+    // Create a script element to load the correct AI script
+    const script = document.createElement("script");
+
+    // Load Netlify AI script if on Netlify, otherwise load Render AI script
+    script.src = isNetlify ? "ai-contact-netlify.js" : "ai-contact.js";
+    script.type = "text/javascript";
+    script.defer = true;
+
+    // Append the script to the body
+    document.body.appendChild(script);
+
+    console.log(`✅ Loaded AI script: ${script.src}`);
+</script>
+
 </body>
 </html>
