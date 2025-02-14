@@ -3,8 +3,12 @@ const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
     try {
+        // ✅ Ensure only POST requests are allowed
         if (event.httpMethod !== "POST") {
-            return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+            return {
+                statusCode: 405,
+                body: JSON.stringify({ error: "Method Not Allowed: Use POST instead" })
+            };
         }
 
         const { name, email, message } = JSON.parse(event.body || "{}");
@@ -33,7 +37,7 @@ exports.handler = async (event) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${HUBSPOT_API_KEY}` // ✅ Correct Bearer Token Authorization
+                "Authorization": `Bearer ${HUBSPOT_API_KEY}` // ✅ Uses Bearer Token
             },
             body: JSON.stringify(data)
         });
