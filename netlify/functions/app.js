@@ -25,7 +25,7 @@ const openai = new OpenAI({
     apiKey: OPENAI_API_KEY
 });
 
-// ✅ AI Chat API Route
+// ✅ AI Chat API Route (Handles AI Conversations)
 app.post("/.netlify/functions/app/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
@@ -39,17 +39,22 @@ app.post("/.netlify/functions/app/netlify-chat", async (req, res) => {
         res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
-        console.error("Error calling OpenAI API:", error);
+        console.error("🚨 OpenAI API Error:", error);
         res.status(500).json({ error: "Error generating AI response", details: error.message });
     }
 });
 
-// ✅ HubSpot Lead API Route
+// ✅ HubSpot Lead API Route (Handles Lead Capturing)
 app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
     try {
         const { email, firstName, lastName } = req.body;
 
-        const response = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
+        // ✅ Check if email is provided
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
+        }
+
+        const hubspotResponse = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${HUBSPOT_API_KEY}`,
@@ -58,26 +63,43 @@ app.post("/.netlify/functions/hubspot-lead", async (req, res) => {
             body: JSON.stringify({
                 properties: {
                     email: email,
-                    firstname: firstName,
-                    lastname: lastName
+                    firstname: firstName || "",
+                    lastname: lastName || ""
                 }
             })
         });
 
-        const data = await response.json();
+        // ✅ Log the raw response before parsing
+        const rawResponse = await hubspotResponse.text();
+        console.log("🚨 Raw HubSpot Response:", rawResponse);
+
+        // ✅ If response is empty, return an error
+        if (!rawResponse) {
+            console.error("🚨 HubSpot API returned an empty response");
+            return res.status(500).json({ error: "HubSpot API returned an empty response" });
+        }
+
+        // ✅ Try parsing JSON safely
+        const data = JSON.parse(rawResponse);
+
+        // ✅ If the API request was unsuccessful, return the error message
+        if (!hubspotResponse.ok) {
+            console.error("🚨 HubSpot API Error:", data);
+            return res.status(500).json({ error: "HubSpot API request failed", details: data });
+        }
+
         res.json({ message: "Lead added successfully!", data });
 
     } catch (error) {
-        console.error("HubSpot API Error:", error);
-        res.status(500).json({ error: "Failed to add lead to HubSpot" });
+        console.error("🚨 HubSpot API Error:", error);
+        res.status(500).json({ error: "Failed to send data to HubSpot", details: error.message });
     }
 });
 
-// ✅ Debug Route
+// ✅ Debug Route (To check if API is working)
 app.get("/.netlify/functions/app", (req, res) => {
     res.json({ message: "✅ Netlify function is running!" });
 });
 
 // ✅ Export for Netlify Functions
 module.exports.handler = serverless(app);
-
