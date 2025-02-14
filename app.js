@@ -13,31 +13,28 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Initialize OpenAI
+// ✅ Ensure OpenAI API Key is loaded
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY  // ✅ Uses `.env` to store API key
+    apiKey: process.env.OPENAI_API_KEY
 });
 
-// ✅ Ensure `/netlify-chat` correctly forwards requests to OpenAI
+// ✅ Correct POST route for Netlify
 app.post("/netlify-chat", async (req, res) => {
     try {
         const userMessage = req.body.message || "No message received";
 
-        // Call OpenAI API
+        // ✅ Call OpenAI API
         const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [{ role: "user", content: userMessage }],
             temperature: 0.7
         });
 
-        // Extract and return the AI response
-        const aiResponse = response.choices[0].message.content;
-        res.json({ response: aiResponse });
+        // ✅ Return AI's response
+        res.json({ response: response.choices[0].message.content });
 
     } catch (error) {
         console.error("Error calling OpenAI API:", error);
-
-        // Return error response
         res.status(500).json({ error: "Error generating AI response", details: error.message });
     }
 });
@@ -47,6 +44,6 @@ app.get("/", (req, res) => {
     res.json({ message: "API is running! Use POST /netlify-chat to chat with AI." });
 });
 
-// Start the Server
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
