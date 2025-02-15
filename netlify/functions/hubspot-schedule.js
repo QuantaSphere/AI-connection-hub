@@ -31,9 +31,48 @@ exports.handler = async (event) => {
     }
 
     try {
-        console.log("🚀 Sending request to HubSpot API...");
+        console.log(`🔎 Searching for HubSpot Contact ID for email: ${email}...`);
 
-        const response = await fetch("https://api.hubapi.com/crm/v3/objects/meetings", {
+        // Step 1: Find the Contact ID from the email
+        const searchResponse = await fetch(`https://api.hubapi.com/crm/v3/objects/contacts/search`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.HUBSPOT_API_KEY}`
+            },
+            body: JSON.stringify({
+                "filterGroups": [
+                    {
+                        "filters": [
+                            {
+                                "propertyName": "email",
+                                "operator": "EQ",
+                                "value": email
+                            }
+                        ]
+                    }
+                ],
+                "properties": ["id"]
+            })
+        });
+
+        const searchData = await searchResponse.json();
+        
+        if (!searchResponse.ok || !searchData.results || searchData.results.length === 0) {
+            console.error("❌ Contact not found in HubSpot:", searchData);
+            return {
+                statusCode: 404,
+                body: JSON.stringify({ success: false, error: "❌ Contact not found in HubSpot. Please ensure the email is correct." })
+            };
+        }
+
+        const contactId = searchData.results[0].id;
+        console.log(`✅ Found HubSpot Contact ID: ${contactId}`);
+
+        // Step 2: Create the Meeting using Contact ID
+        console.log("🚀 Sending request to HubSpot API to create a meeting...");
+
+        const meetingResponse = await fetch("https://api.hubapi.com/crm/v3/objects/meetings", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,9 +85,7 @@ exports.handler = async (event) => {
                 },
                 associations: [
                     {
-                        "to": {  // ✅ REQUIRED: Who this meeting is associated with
-                            "email": email
-                        },
+                        "to": { "id": contactId },  // ✅ FIXED: Use Contact ID instead of email
                         "associationCategory": "HUBSPOT_DEFINED",
                         "associationTypeId": 3 // ✅ 3 = Contact
                     }
@@ -56,7 +93,7 @@ exports.handler = async (event) => {
             })
         });
 
-        const resultText = await response.text();
+        const resultText = await meetingResponse.text();
         console.log("🔍 HubSpot API Response:", resultText);
 
         let result;
@@ -70,10 +107,10 @@ exports.handler = async (event) => {
             };
         }
 
-        if (!response.ok) {
+        if (!meetingResponse.ok) {
             console.error("❌ HubSpot API Error:", result);
             return { 
-                statusCode: response.status, 
+                statusCode: meetingResponse.status, 
                 body: JSON.stringify({ success: false, error: result.message || "❌ Failed to schedule." }) 
             };
         }
