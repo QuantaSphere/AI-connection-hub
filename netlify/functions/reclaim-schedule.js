@@ -28,7 +28,14 @@ exports.handler = async (event) => {
 
         const result = await response.json();
 
-        return { statusCode: 200, body: JSON.stringify({ success: true, data: result }) };
+        return { 
+            statusCode: 200, 
+            body: JSON.stringify({ 
+                success: true, 
+                data: result,
+                meetingLink: "https://app.reclaim.ai/m/yawdie-gamer/quick-meeting" // Your Reclaim meeting link
+            }) 
+        };
 
     } catch (error) {
         console.error("❌ Scheduling API Error:", error);
