@@ -11,22 +11,42 @@
     
     <!-- ✅ Custom Styling -->
     <link rel="stylesheet" href="/style.css">
-
 </head>
 <body>
 
-    <!-- 🌟 Responsive Header with Login -->
+    <!-- 🌟 Responsive Header with Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">QuantaSphere</a>
-            <button class="btn btn-primary" onclick="location.href='./hubspot-form/register.html'">Login / Register</button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Platform</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+                    <li class="nav-item"><button class="btn btn-primary" onclick="location.href='./hubspot-form/register.html'">Login / Register</button></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <!-- 🎉 Main Content -->
-    <div class="container mt-4 text-center">
-        <h1 class="text-white">Welcome to QuantaSphere</h1>
+    <!-- 🎉 Hero Section -->
+    <div class="hero-section text-center">
+        <h1>Experience the Power of AI</h1>
+        <p>Engage with our AI-driven chat assistant and streamline your queries instantly.</p>
         <button id="openChat" class="btn btn-primary mt-3">💬 Chat with AI</button>
+    </div>
+
+    <!-- 📌 Horizontal Navigation -->
+    <div class="horizontal-nav">
+        <a href="#">Definition</a>
+        <a href="#">Benefits</a>
+        <a href="#">Types</a>
+        <a href="#">AI vs Human</a>
+        <a href="#">Software Comparison</a>
     </div>
 
     <!-- 🗨️ Chat Window (Bootstrap Card) -->
