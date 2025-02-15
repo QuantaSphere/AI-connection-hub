@@ -87,6 +87,7 @@ exports.handler = async (event) => {
         // Step 2: Calculate Meeting Start/End Time
         const startTime = new Date();
         startTime.setMinutes(startTime.getMinutes() + 10);  // Meeting starts 10 min from now
+        const startTimestamp = startTime.getTime(); // Convert to Unix timestamp in milliseconds
 
         const endTime = new Date(startTime);
         endTime.setMinutes(endTime.getMinutes() + 30);  // Meeting lasts 30 min
@@ -107,7 +108,8 @@ exports.handler = async (event) => {
                     hs_meeting_end_time: endTime.toISOString(),  // ✅ REQUIRED: End time
                     hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
                     hs_meeting_location: "Virtual",  // ✅ REQUIRED: Can be "Virtual" or "In Person"
-                    hs_meeting_attendees: contactId.toString()  // ✅ REQUIRED: Convert to a string
+                    hs_meeting_attendees: contactId.toString(),  // ✅ REQUIRED: Comma-separated string of attendee IDs
+                    hs_timestamp: startTimestamp  // ✅ REQUIRED: Meeting start time in UNIX timestamp
                 },
                 associations: [
                     {
