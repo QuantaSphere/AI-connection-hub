@@ -81,6 +81,7 @@ function initChat() {
         }
     });
 }
+
 document.getElementById("scheduleMeeting").addEventListener("click", async function () {
     const userEmail = document.getElementById("userEmail").value;
 
@@ -96,22 +97,24 @@ document.getElementById("scheduleMeeting").addEventListener("click", async funct
             body: JSON.stringify({ email: userEmail })
         });
 
-        const result = await response.json();
-
-        if (result.success) {
-            document.getElementById("scheduleStatus").innerHTML = `
-                ✅ Meeting Scheduled! <br>
-                <a href="${result.meetingLink}" target="_blank" class="btn btn-success">Join Meeting</a>
-            `;
-        } else {
-            document.getElementById("scheduleStatus").innerText = "❌ Error scheduling meeting.";
+        try {
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById("scheduleStatus").innerHTML = `
+                    ✅ Meeting Scheduled! <br>
+                    <a href="${result.meetingLink}" target="_blank" class="btn btn-success">Join Meeting</a>
+                `;
+            } else {
+                document.getElementById("scheduleStatus").innerText = result.error || "❌ Error scheduling meeting.";
+            }
+        } catch (jsonError) {
+            document.getElementById("scheduleStatus").innerText = "❌ Failed to process response.";
         }
     } catch (error) {
         console.error("🚨 Scheduling Error:", error);
         document.getElementById("scheduleStatus").innerText = "❌ Something went wrong.";
     }
 });
-
 
 // ✅ Ensure `initChat()` is globally available
 window.initChat = initChat;
