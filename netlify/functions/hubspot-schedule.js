@@ -92,7 +92,7 @@ exports.handler = async (event) => {
                     hs_meeting_end_time: endTime.toISOString(),  // ✅ REQUIRED: End time
                     hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
                     hs_meeting_location: "Virtual",  // ✅ REQUIRED: Can be "Virtual" or "In Person"
-                    hs_meeting_attendees: contactId.toString()  // ✅ FIXED: Convert to a string
+                    hs_meeting_attendees: contactId.toString()  // ✅ REQUIRED: Comma-separated string of attendee IDs
                 },
                 associations: [
                     {
@@ -140,8 +140,6 @@ exports.handler = async (event) => {
     } catch (error) {
         console.error("❌ Scheduling API Error:", error);
         return { 
-            statusCode: 500, 
-            body: JSON.stringify({ success: false, error: "❌ Failed to schedule due to server error." }) 
-        };
-    }
-};
+            status
+::contentReference[oaicite:1]{index=1}
+ 
