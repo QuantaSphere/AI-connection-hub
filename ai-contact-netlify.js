@@ -23,7 +23,7 @@ async function getAIResponse(userMessage) {
 // ✅ HubSpot API Integration for Scheduling
 async function scheduleWithHubSpot(email) {
     try {
-        const response = await fetch("/.netlify/functions/reclaim-schedule", {
+        const response = await fetch("/.netlify/functions/hubspot-schedule", {  // ✅ Updated function name
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })
