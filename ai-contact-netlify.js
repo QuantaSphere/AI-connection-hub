@@ -52,8 +52,17 @@ function initChat() {
     const sendButton = document.getElementById("sendMessage");
     const chatMessages = document.getElementById("chatMessages");
 
+    // ✅ Ensure chat box is initially hidden
+    chatBox.style.display = "none";
+
     chatButton.addEventListener("click", function () {
-        chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+        if (chatBox.style.display === "none" || chatBox.style.display === "") {
+            chatBox.style.display = "block";
+            chatButton.innerText = "❌ Close Chat";
+        } else {
+            chatBox.style.display = "none";
+            chatButton.innerText = "💬 Chat with AI";
+        }
     });
 
     sendButton.addEventListener("click", async function () {
@@ -77,4 +86,4 @@ function initChat() {
 window.initChat = initChat;
 
 // ✅ Auto-run `initChat()` after script loads
-initChat();
+document.addEventListener("DOMContentLoaded", initChat);
