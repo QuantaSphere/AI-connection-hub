@@ -94,9 +94,6 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    position: relative;
-    flex-direction: column;
-    align-items: center;
 }
 
 #scheduleButton {
@@ -121,9 +118,6 @@ body {
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.3);
     margin-top: 10px;
-    width: 90%;
-    max-width: 400px;
-    transition: all 0.3s ease-in-out;
 }
 
 #scheduleForm input {
@@ -149,7 +143,6 @@ body {
 }
 
 /* 💡 AI Chat Button (Fixed at Bottom Right) */
-
 #openChat {
     background: #ff4081;
     color: white;
@@ -175,12 +168,37 @@ body {
     right: 20px;
     transition: background 0.3s;
 }
+
 #openChat:hover {
     background: #ff669a;
 }
 
-/* 📱 Mobile & Desktop Adjustments - Align Reclaim Button Behavior */
-@media screen and (max-width: 1024px) {
+/* 🗨️ Chat Window */
+.chat-box {
+    width: 350px;
+    max-width: 90%;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    display: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(255, 64, 129, 0.4);
+    background: #1f2833;
+    border: 1px solid #ff4081;
+}
+
+.chat-box .card-header {
+    background: #ff4081;
+    color: white;
+    font-weight: bold;
+}
+
+#openChat:hover {
+    background: #ff669a;
+}
+
+/* 📱 Mobile Responsiveness */
+@media screen and (max-width: 768px) {
     .horizontal-nav {
         flex-direction: column;
         align-items: center;
@@ -195,19 +213,5 @@ body {
     }
     #scheduleForm {
         width: 90%;
-        position: relative;
-        max-width: 400px;
-    }
-    
-    /* More Compact Reclaim Scheduling Dropdown on Desktop & Mobile */
-    .schedule-container.open #scheduleForm {
-        box-shadow: none;
-        margin-top: 5px;
-        display: block;
-    }
-    
-    /* Move Chat Button Down if Scheduling Form is Open */
-    .schedule-container.open + #openChat {
-        bottom: 90px;
     }
 }
