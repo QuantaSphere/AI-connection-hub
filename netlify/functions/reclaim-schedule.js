@@ -3,13 +3,19 @@ const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
     if (event.httpMethod !== "POST") {
-        return { statusCode: 405, body: "❌ Method Not Allowed. Use POST." };
+        return { 
+            statusCode: 405, 
+            body: JSON.stringify({ success: false, error: "❌ Method Not Allowed. Use POST." })
+        };
     }
 
     const { email } = JSON.parse(event.body || "{}");
 
     if (!email) {
-        return { statusCode: 400, body: "❌ Missing email." };
+        return { 
+            statusCode: 400, 
+            body: JSON.stringify({ success: false, error: "❌ Missing email." })
+        };
     }
 
     try {
@@ -36,9 +42,11 @@ exports.handler = async (event) => {
                 meetingLink: "https://app.reclaim.ai/m/yawdie-gamer/quick-meeting" // Your Reclaim meeting link
             }) 
         };
-
     } catch (error) {
         console.error("❌ Scheduling API Error:", error);
-        return { statusCode: 500, body: "❌ Failed to schedule." };
+        return { 
+            statusCode: 500, 
+            body: JSON.stringify({ success: false, error: "❌ Failed to schedule." })
+        };
     }
 };
