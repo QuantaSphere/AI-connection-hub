@@ -197,8 +197,8 @@ body {
     background: #ff669a;
 }
 
-/* 📱 Mobile Responsiveness */
-@media screen and (max-width: 768px) {
+/* 📱 Mobile & Desktop Adjustments - Align Reclaim Button Behavior */
+@media screen and (max-width: 1024px) {
     .horizontal-nav {
         flex-direction: column;
         align-items: center;
@@ -213,5 +213,20 @@ body {
     }
     #scheduleForm {
         width: 90%;
+        position: relative;
+        max-width: 400px;
+    }
+    
+    /* More Compact Reclaim Scheduling Dropdown on Desktop & Mobile */
+    .schedule-container.open #scheduleForm {
+        box-shadow: none;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    /* Move Chat Button Down if Scheduling Form is Open */
+    .schedule-container.open + #openChat {
+        bottom: 90px;
     }
 }
+
