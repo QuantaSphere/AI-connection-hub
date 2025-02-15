@@ -99,7 +99,10 @@ document.getElementById("scheduleMeeting").addEventListener("click", async funct
         const result = await response.json();
 
         if (result.success) {
-            document.getElementById("scheduleStatus").innerText = "✅ Meeting Scheduled!";
+            document.getElementById("scheduleStatus").innerHTML = `
+                ✅ Meeting Scheduled! <br>
+                <a href="${result.meetingLink}" target="_blank" class="btn btn-success">Join Meeting</a>
+            `;
         } else {
             document.getElementById("scheduleStatus").innerText = "❌ Error scheduling meeting.";
         }
@@ -108,6 +111,7 @@ document.getElementById("scheduleMeeting").addEventListener("click", async funct
         document.getElementById("scheduleStatus").innerText = "❌ Something went wrong.";
     }
 });
+
 
 // ✅ Ensure `initChat()` is globally available
 window.initChat = initChat;
