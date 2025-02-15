@@ -27,11 +27,18 @@
                     <li class="nav-item"><a class="nav-link" href="#">Platform</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Resources</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
-                    <li class="nav-item"><button class="btn btn-primary" onclick="location.href='./hubspot-form/register.html'">Register</button></li>
+                    <li class="nav-item"><button class="btn btn-primary" onclick="location.href='./hubspot-form/register.html'">Login / Register</button></li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!-- 📌 Horizontal Navigation -->
+    <div class="horizontal-nav">
+        <a href="#">Introduction</a>
+        <a href="#">Benefits</a>
+        <a href="#">Types</a>
+    </div>
 
     <!-- 🎉 Hero Section -->
     <div class="hero-section text-center">
@@ -40,13 +47,12 @@
         <button id="openChat" class="btn btn-primary mt-3">💬 Chat with AI</button>
     </div>
 
-    <!-- 📌 Horizontal Navigation -->
-    <div class="horizontal-nav">
-        <a href="#">Introduction</a>
-        <a href="#">Benefits</a>
-        <a href="#">Types</a>
-        
-        <a href="#">Software Comparison</a>
+    <!-- 📅 Reclaim Scheduling Form -->
+    <div class="container text-center mt-5">
+        <h2>📅 Book a Smart Meeting</h2>
+        <input type="email" id="userEmail" class="form-control mt-2" placeholder="Enter your email">
+        <button id="scheduleMeeting" class="btn btn-primary mt-3">Schedule Meeting</button>
+        <p id="scheduleStatus" class="text-white mt-2"></p>
     </div>
 
     <!-- 🗨️ Chat Window (Bootstrap Card) -->
