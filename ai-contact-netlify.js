@@ -81,6 +81,33 @@ function initChat() {
         }
     });
 }
+document.getElementById("scheduleMeeting").addEventListener("click", async function () {
+    const userEmail = document.getElementById("userEmail").value;
+
+    if (!userEmail) {
+        document.getElementById("scheduleStatus").innerText = "❌ Please enter an email.";
+        return;
+    }
+
+    try {
+        const response = await fetch("/.netlify/functions/reclaim-schedule", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: userEmail })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById("scheduleStatus").innerText = "✅ Meeting Scheduled!";
+        } else {
+            document.getElementById("scheduleStatus").innerText = "❌ Error scheduling meeting.";
+        }
+    } catch (error) {
+        console.error("🚨 Scheduling Error:", error);
+        document.getElementById("scheduleStatus").innerText = "❌ Something went wrong.";
+    }
+});
 
 // ✅ Ensure `initChat()` is globally available
 window.initChat = initChat;
