@@ -4,13 +4,12 @@ const fetch = require("node-fetch");
 exports.handler = async (event) => {
     console.log("🔍 Received Request for Scheduling...");
 
-    // ✅ If the user opens the URL in a browser, return an HTML page instead of an error
     if (event.httpMethod === "GET") {
         return { 
             statusCode: 200, 
             headers: { "Content-Type": "text/html" },
             body: `<html>
-                    <head><title>HubSpot Scheduler</title></head>
+                    <head><title>HubSpot Scheduling API</title></head>
                     <body>
                         <h1>🚀 HubSpot Scheduling API</h1>
                         <p>This function only accepts <strong>POST</strong> requests to schedule a meeting.</p>
@@ -20,7 +19,6 @@ exports.handler = async (event) => {
         };
     }
 
-    // ❌ Prevent non-POST requests
     if (event.httpMethod !== "POST") {
         console.error("❌ Method Not Allowed: Only POST requests are accepted.");
         return { 
@@ -86,7 +84,14 @@ exports.handler = async (event) => {
         const contactId = searchData.results[0].id;
         console.log(`✅ Found HubSpot Contact ID: ${contactId}`);
 
-        // Step 2: Create the Meeting using Contact ID
+        // Step 2: Calculate Meeting Start/End Time
+        const startTime = new Date();
+        startTime.setMinutes(startTime.getMinutes() + 10);  // Meeting starts 10 min from now
+
+        const endTime = new Date(startTime);
+        endTime.setMinutes(endTime.getMinutes() + 30);  // Meeting lasts 30 min
+
+        // Step 3: Create the Meeting using Contact ID
         console.log("🚀 Sending request to HubSpot API to create a meeting...");
 
         const meetingResponse = await fetch("https://api.hubapi.com/crm/v3/objects/meetings", {
@@ -98,7 +103,11 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 properties: {
                     hs_meeting_title: "Smart Meeting",  // ✅ REQUIRED: Title of meeting
+                    hs_meeting_start_time: startTime.toISOString(),  // ✅ REQUIRED: Start time
+                    hs_meeting_end_time: endTime.toISOString(),  // ✅ REQUIRED: End time
                     hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
+                    hs_meeting_location: "Virtual",  // ✅ REQUIRED: Can be "Virtual" or "In Person"
+                    hs_meeting_attendees: contactId.toString()  // ✅ REQUIRED: Convert to a string
                 },
                 associations: [
                     {
