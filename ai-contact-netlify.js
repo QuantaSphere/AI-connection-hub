@@ -20,26 +20,20 @@ async function getAIResponse(userMessage) {
     }
 }
 
-// ✅ HubSpot API Integration (ONLY for registration, NOT in chat)
-async function sendToHubSpot(name, email, message) {
+// ✅ HubSpot API Integration for Scheduling
+async function scheduleWithHubSpot(email) {
     try {
-        const response = await fetch("/.netlify/functions/hubspot", { 
+        const response = await fetch("/.netlify/functions/reclaim-schedule", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, message })
+            body: JSON.stringify({ email })
         });
 
         const result = await response.json();
-
-        if (!result.success) {
-            throw new Error("HubSpot API request failed.");
-        }
-
-        console.log("✅ HubSpot Lead Created:", result);
         return result;
     } catch (error) {
-        console.error("❌ Error sending data to HubSpot:", error);
-        return null;
+        console.error("❌ Error scheduling meeting with HubSpot:", error);
+        return { success: false, error: "❌ Failed to schedule meeting." };
     }
 }
 
@@ -67,7 +61,7 @@ function initChat() {
 
     sendButton.addEventListener("click", async function () {
         const userMessage = userInput.value.trim();
-        if (!userMessage) return; // Prevent empty messages
+        if (!userMessage) return;
 
         chatMessages.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
         userInput.value = "";
@@ -91,24 +85,14 @@ document.getElementById("scheduleMeeting").addEventListener("click", async funct
     }
 
     try {
-        const response = await fetch("/.netlify/functions/reclaim-schedule", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: userEmail })
-        });
-
-        try {
-            const result = await response.json();
-            if (result.success) {
-                document.getElementById("scheduleStatus").innerHTML = `
-                    ✅ Meeting Scheduled! <br>
-                    <a href="${result.meetingLink}" target="_blank" class="btn btn-success">Join Meeting</a>
-                `;
-            } else {
-                document.getElementById("scheduleStatus").innerText = result.error || "❌ Error scheduling meeting.";
-            }
-        } catch (jsonError) {
-            document.getElementById("scheduleStatus").innerText = "❌ Failed to process response.";
+        const result = await scheduleWithHubSpot(userEmail);
+        if (result.success) {
+            document.getElementById("scheduleStatus").innerHTML = `
+                ✅ Meeting Scheduled! <br>
+                <a href="${result.meetingLink}" target="_blank" class="btn btn-success">Join Meeting</a>
+            `;
+        } else {
+            document.getElementById("scheduleStatus").innerText = result.error || "❌ Error scheduling meeting.";
         }
     } catch (error) {
         console.error("🚨 Scheduling Error:", error);
