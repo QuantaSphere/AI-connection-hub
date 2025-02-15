@@ -41,14 +41,20 @@ exports.handler = async (event) => {
             },
             body: JSON.stringify({
                 properties: {
-                    email: email,
-                    meetingType: "Smart Meeting",
-                    durationMinutes: 30
+                    hs_meeting_type: "Smart Meeting",  // ✅ Ensure this is correct
+                    hs_meeting_duration: 1800,  // ✅ Duration should be in SECONDS (30 min = 1800 sec)
+                    associations: [  // ✅ Associate the meeting with a contact
+                        {
+                            "associationCategory": "HUBSPOT_DEFINED",
+                            "associationTypeId": 3,  // 3 = Contact
+                            "email": email
+                        }
+                    ]
                 }
             })
         });
 
-        const resultText = await response.text(); // Capture raw response
+        const resultText = await response.text();
         console.log("🔍 HubSpot API Response:", resultText);
 
         let result;
@@ -66,7 +72,7 @@ exports.handler = async (event) => {
             console.error("❌ HubSpot API Error:", result);
             return { 
                 statusCode: response.status, 
-                body: JSON.stringify({ success: false, error: result.error || "❌ Failed to schedule." }) 
+                body: JSON.stringify({ success: false, error: result.message || "❌ Failed to schedule." }) 
             };
         }
 
