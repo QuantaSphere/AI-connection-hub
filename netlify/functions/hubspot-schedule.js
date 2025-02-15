@@ -42,13 +42,15 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 properties: {
                     hs_meeting_type: "Smart Meeting",  // ✅ Correct HubSpot field name
-                    hs_meeting_duration: 1800  // ✅ Duration in SECONDS (30 min = 1800 sec)
+                    hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
                 },
-                associations: [  // ✅ FIXED: associations must be an array
+                associations: [
                     {
+                        "to": {  // ✅ REQUIRED: Who this meeting is associated with
+                            "email": email
+                        },
                         "associationCategory": "HUBSPOT_DEFINED",
-                        "associationTypeId": 3, // ✅ 3 = Contact
-                        "email": email
+                        "associationTypeId": 3 // ✅ 3 = Contact
                     }
                 ]
             })
