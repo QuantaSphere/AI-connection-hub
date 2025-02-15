@@ -19,6 +19,17 @@ body {
     font-weight: bold;
 }
 
+.navbar-nav .nav-link {
+    color: white;
+    font-size: 16px;
+    margin: 0 15px;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ff4081;
+}
+
 .navbar button {
     background-color: #ff4081;
     border: none;
@@ -33,15 +44,22 @@ body {
 }
 
 /* 🎉 Hero Section */
-.container {
+.hero-section {
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 20px;
 }
 
-h1 {
-    font-size: 36px;
+.hero-section h1 {
+    font-size: 40px;
     font-weight: bold;
     text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+.hero-section p {
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
 }
 
 /* 💡 AI Chat Button */
