@@ -149,6 +149,7 @@ body {
 }
 
 /* 💡 AI Chat Button (Fixed at Bottom Right) */
+
 #openChat {
     background: #ff4081;
     color: white;
@@ -159,10 +160,20 @@ body {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: auto; /* Prevents full width issue */
-    max-width: 200px; /* Limits expansion */
-    text-align: center; /* Keeps text inside button */
-    transition: background 0.3s, bottom 0.3s ease-in-out;
+    transition: background 0.3s;
+}
+/* 💡 AI Chat Button */
+#openChat {
+    background: #ff4081;
+    color: white;
+    font-size: 18px;
+    padding: 12px 20px;
+    border-radius: 25px;
+    box-shadow: 0px 4px 8px rgba(255, 64, 129, 0.3);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    transition: background 0.3s;
 }
 #openChat:hover {
     background: #ff669a;
