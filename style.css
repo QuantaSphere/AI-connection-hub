@@ -142,7 +142,7 @@ body {
     background-color: #ff669a;
 }
 
-/* 💡 AI Chat Button (Fixed at Bottom Right) */
+/* 💡 AI Chat Button (Fixed at Bottom Right, Adjusts on Mobile) */
 #openChat {
     background: #ff4081;
     color: white;
@@ -153,51 +153,14 @@ body {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    transition: background 0.3s;
-}
-/* 💡 AI Chat Button */
-#openChat {
-    background: #ff4081;
-    color: white;
-    font-size: 18px;
-    padding: 12px 20px;
-    border-radius: 25px;
-    box-shadow: 0px 4px 8px rgba(255, 64, 129, 0.3);
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    transition: background 0.3s;
+    transition: background 0.3s, bottom 0.3s ease-in-out;
 }
 
 #openChat:hover {
     background: #ff669a;
 }
 
-/* 🗨️ Chat Window */
-.chat-box {
-    width: 350px;
-    max-width: 90%;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    display: none;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(255, 64, 129, 0.4);
-    background: #1f2833;
-    border: 1px solid #ff4081;
-}
-
-.chat-box .card-header {
-    background: #ff4081;
-    color: white;
-    font-weight: bold;
-}
-
-#openChat:hover {
-    background: #ff669a;
-}
-
-/* 📱 Mobile Responsiveness */
+/* 📱 Mobile Responsiveness - Adjust Chat Button When Schedule Form Opens */
 @media screen and (max-width: 768px) {
     .horizontal-nav {
         flex-direction: column;
@@ -213,5 +176,10 @@ body {
     }
     #scheduleForm {
         width: 90%;
+    }
+    
+    /* Move Chat Button Down if Scheduling Form is Open */
+    .schedule-container.open + #openChat {
+        bottom: 80px;
     }
 }
