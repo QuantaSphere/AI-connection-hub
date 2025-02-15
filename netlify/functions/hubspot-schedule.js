@@ -92,7 +92,7 @@ exports.handler = async (event) => {
                     hs_meeting_end_time: endTime.toISOString(),  // ✅ REQUIRED: End time
                     hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
                     hs_meeting_location: "Virtual",  // ✅ REQUIRED: Can be "Virtual" or "In Person"
-                    hs_meeting_attendees: [contactId]  // ✅ REQUIRED: List of attendees (Contact ID)
+                    hs_meeting_attendees: contactId.toString()  // ✅ FIXED: Convert to a string
                 },
                 associations: [
                     {
