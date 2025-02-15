@@ -45,8 +45,18 @@
         <a href="#">Introduction</a>
         <a href="#">Benefits</a>
         <a href="#">Types</a>
-        
         <a href="#">Software Comparison</a>
+    </div>
+
+    <!-- 📅 Reclaim Scheduling Button -->
+    <div class="schedule-container">
+        <button id="scheduleButton" class="btn btn-danger">📅 Reclaim Scheduling</button>
+        <div id="scheduleForm" class="schedule-form">
+            <h3>Book a Smart Meeting</h3>
+            <input type="email" id="userEmail" class="form-control" placeholder="Enter your email">
+            <button id="scheduleMeeting" class="btn btn-primary mt-2">Schedule Meeting</button>
+            <p id="scheduleStatus" class="text-white mt-2"></p>
+        </div>
     </div>
 
     <!-- 🗨️ Chat Window (Bootstrap Card) -->
@@ -61,7 +71,13 @@
         </div>
     </div>
 
-    <!-- ✅ AI Chat Script -->
+    <!-- ✅ AI Chat & Scheduling Script -->
     <script src="ai-contact-netlify.js"></script>
+    <script>
+        document.getElementById("scheduleButton").addEventListener("click", function () {
+            const form = document.getElementById("scheduleForm");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        });
+    </script>
 </body>
 </html>
