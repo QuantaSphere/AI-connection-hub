@@ -69,7 +69,14 @@ exports.handler = async (event) => {
         const contactId = searchData.results[0].id;
         console.log(`✅ Found HubSpot Contact ID: ${contactId}`);
 
-        // Step 2: Create the Meeting using Contact ID
+        // Step 2: Calculate Meeting Start/End Time
+        const startTime = new Date();
+        startTime.setMinutes(startTime.getMinutes() + 10);  // Meeting starts 10 min from now
+
+        const endTime = new Date(startTime);
+        endTime.setMinutes(endTime.getMinutes() + 30);  // Meeting lasts 30 min
+
+        // Step 3: Create the Meeting using Contact ID
         console.log("🚀 Sending request to HubSpot API to create a meeting...");
 
         const meetingResponse = await fetch("https://api.hubapi.com/crm/v3/objects/meetings", {
@@ -80,12 +87,16 @@ exports.handler = async (event) => {
             },
             body: JSON.stringify({
                 properties: {
-                    hs_meeting_type: "Smart Meeting",  // ✅ Correct HubSpot field name
+                    hs_meeting_title: "Smart Meeting",  // ✅ REQUIRED: Title of meeting
+                    hs_meeting_start_time: startTime.toISOString(),  // ✅ REQUIRED: Start time
+                    hs_meeting_end_time: endTime.toISOString(),  // ✅ REQUIRED: End time
                     hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
+                    hs_meeting_location: "Virtual",  // ✅ REQUIRED: Can be "Virtual" or "In Person"
+                    hs_meeting_attendees: [contactId]  // ✅ REQUIRED: List of attendees (Contact ID)
                 },
                 associations: [
                     {
-                        "to": { "id": contactId },  // ✅ FIXED: Use Contact ID instead of email
+                        "to": { "id": contactId },  // ✅ Use Contact ID
                         "associationCategory": "HUBSPOT_DEFINED",
                         "associationTypeId": 3 // ✅ 3 = Contact
                     }
