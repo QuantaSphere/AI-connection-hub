@@ -140,6 +140,8 @@ exports.handler = async (event) => {
     } catch (error) {
         console.error("❌ Scheduling API Error:", error);
         return { 
-            status
-::contentReference[oaicite:1]{index=1}
- 
+            statusCode: 500, 
+            body: JSON.stringify({ success: false, error: "❌ Failed to schedule due to server error." }) 
+        };
+    }
+};
