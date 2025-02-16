@@ -2,79 +2,90 @@ require("dotenv").config();
 const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
+    console.log("✅ Square Checkout Function Called");
+
     if (event.httpMethod !== "POST") {
         return { 
             statusCode: 405, 
-            body: JSON.stringify({ success: false, error: "❌ Method Not Allowed. Use POST." }) 
-        };
-    }
-
-    const { productName, productPrice } = JSON.parse(event.body || "{}");
-
-    if (!productName || !productPrice) {
-        return { 
-            statusCode: 400, 
-            body: JSON.stringify({ success: false, error: "❌ Missing product details." }) 
+            body: JSON.stringify({ success: false, error: "Method Not Allowed. Use POST." }) 
         };
     }
 
     try {
-        console.log("🚀 Creating Square Checkout Link...");
+        const { productName, productPrice } = JSON.parse(event.body || "{}");
 
-        // ✅ Dynamically select API URL based on environment (Sandbox or Production)
-        const API_URL = process.env.SQUARE_ENVIRONMENT === "sandbox" 
-            ? "https://connect.squareupsandbox.com/v2/checkout"
-            : "https://connect.squareup.com/v2/checkout";
+        if (!productName || !productPrice) {
+            console.error("❌ Missing product details");
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ success: false, error: "❌ Missing product name or price." })
+            };
+        }
 
-        const response = await fetch(API_URL, {
+        console.log(`🔍 Creating Checkout for: ${productName} - $${productPrice}`);
+
+        const response = await fetch("https://connect.squareupsandbox.com/v2/checkout/orders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`  // ✅ Use Sandbox token if testing
+                "Authorization": `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`
             },
             body: JSON.stringify({
-                idempotency_key: new Date().getTime().toString(), // Unique transaction key
+                idempotency_key: new Date().getTime().toString(),
                 order: {
-                    location_id: process.env.SQUARE_LOCATION_ID,  // ✅ Use Sandbox Location ID if testing
+                    location_id: process.env.SQUARE_LOCATION_ID,
                     line_items: [
                         {
                             name: productName,
                             quantity: "1",
                             base_price_money: {
-                                amount: Math.round(productPrice * 100), // Convert to cents
+                                amount: productPrice * 100, // Convert price to cents
                                 currency: "USD"
                             }
                         }
                     ]
                 },
-                checkout_options: {
-                    allow_tipping: false,
-                    redirect_url: "https://yourwebsite.com/order-success" // ✅ Change to your success page
-                }
+                redirect_url: "https://quantasphere.netlify.app/products/"
             })
         });
 
-        const result = await response.json();
+        const resultText = await response.text();
+        console.log("🔍 Square API Response:", resultText);
 
-        if (!response.ok) {
-            return { 
-                statusCode: response.status, 
-                body: JSON.stringify({ success: false, error: result.message || "❌ Failed to create checkout link." }) 
+        let result;
+        try {
+            result = JSON.parse(resultText);
+        } catch (error) {
+            console.error("❌ Failed to parse Square API response:", resultText);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ success: false, error: "❌ Unexpected response from Square API." })
             };
         }
 
+        if (!response.ok) {
+            console.error("❌ Square API Error:", result);
+            return { 
+                statusCode: response.status, 
+                body: JSON.stringify({ success: false, error: result.message || "❌ Failed to create checkout." }) 
+            };
+        }
+
+        console.log("✅ Checkout Created Successfully:", result);
+
         return { 
-            statusCode: 200, 
+            statusCode: 200,
             body: JSON.stringify({ 
                 success: true, 
-                checkoutUrl: result.checkout.checkout_page_url  // ✅ Redirect user to Square Payment Page
+                checkoutUrl: result.checkout.checkout_page_url 
             }) 
         };
 
     } catch (error) {
+        console.error("❌ Square API Error:", error);
         return { 
-            statusCode: 500, 
-            body: JSON.stringify({ success: false, error: "❌ Square API Error." }) 
+            statusCode: 500,
+            body: JSON.stringify({ success: false, error: "❌ Failed to process Square Checkout." }) 
         };
     }
 };
