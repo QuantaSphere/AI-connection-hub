@@ -21,16 +21,21 @@ exports.handler = async (event) => {
     try {
         console.log("🚀 Creating Square Checkout Link...");
 
-        const response = await fetch("https://connect.squareup.com/v2/checkout", {
+        // ✅ Dynamically select API URL based on environment (Sandbox or Production)
+        const API_URL = process.env.SQUARE_ENVIRONMENT === "sandbox" 
+            ? "https://connect.squareupsandbox.com/v2/checkout"
+            : "https://connect.squareup.com/v2/checkout";
+
+        const response = await fetch(API_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`
+                "Authorization": `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`  // ✅ Use Sandbox token if testing
             },
             body: JSON.stringify({
                 idempotency_key: new Date().getTime().toString(), // Unique transaction key
                 order: {
-                    location_id: process.env.SQUARE_LOCATION_ID,
+                    location_id: process.env.SQUARE_LOCATION_ID,  // ✅ Use Sandbox Location ID if testing
                     line_items: [
                         {
                             name: productName,
