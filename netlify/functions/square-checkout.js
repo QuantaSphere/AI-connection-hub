@@ -72,9 +72,9 @@ exports.handler = async (event) => {
         const orderId = orderData.order.id;
         console.log("✅ Order Created:", orderId);
 
-        // ✅ Step 2: Create a Checkout Session for Payment
+        // ✅ Step 2: Create a Checkout Session for Payment (🔧 FIXED ENDPOINT!)
         console.log("🚀 Creating Square Checkout...");
-        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/checkout", {
+        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/checkout/orders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -88,12 +88,26 @@ exports.handler = async (event) => {
             })
         });
 
-        const checkoutData = await checkoutResponse.json();
+        // ✅ Fix JSON Parsing Issue
+        const checkoutText = await checkoutResponse.text();
+        console.log("🔍 Square Checkout API Response:", checkoutText);
+
+        let checkoutData;
+        try {
+            checkoutData = JSON.parse(checkoutText);
+        } catch (error) {
+            console.error("❌ Failed to parse Square API response:", checkoutText);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ success: false, error: "❌ Unexpected response from Square API." })
+            };
+        }
+
         if (!checkoutResponse.ok || !checkoutData.checkout) {
             console.error("❌ Square Checkout API Error:", checkoutData);
             return { 
                 statusCode: 500, 
-                body: JSON.stringify({ success: false, error: "❌ Failed to create Square checkout." }) 
+                body: JSON.stringify({ success: false, error: checkoutData.errors ? checkoutData.errors[0].detail : "❌ Failed to create Square checkout." }) 
             };
         }
 
