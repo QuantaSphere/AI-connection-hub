@@ -33,9 +33,9 @@ exports.handler = async (event) => {
             };
         }
 
-        // ✅ Step 1: Create an Order
-        console.log("🚀 Creating Square Order...");
-        const orderResponse = await fetch("https://connect.squareupsandbox.com/v2/orders", {
+        // ✅ Step 1: Create a Payment Link
+        console.log("🚀 Creating Square Checkout Payment Link...");
+        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/online-checkout/payment-links", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -56,34 +56,7 @@ exports.handler = async (event) => {
                             }
                         }
                     ]
-                }
-            })
-        });
-
-        const orderData = await orderResponse.json();
-        if (!orderResponse.ok || !orderData.order) {
-            console.error("❌ Square Order API Error:", orderData);
-            return { 
-                statusCode: 500, 
-                body: JSON.stringify({ success: false, error: "❌ Failed to create Square order." }) 
-            };
-        }
-
-        const orderId = orderData.order.id;
-        console.log("✅ Order Created:", orderId);
-
-        // ✅ Step 2: Create a Checkout Payment Link
-        console.log("🚀 Creating Square Checkout Payment Link...");
-        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/checkout/payment-links", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
-                "Square-Version": "2025-01-23"
-            },
-            body: JSON.stringify({
-                idempotency_key: new Date().getTime().toString(),
-                order_id: orderId,
+                },
                 checkout_options: {
                     redirect_url: "https://quantasphere.netlify.app/products/"
                 }
