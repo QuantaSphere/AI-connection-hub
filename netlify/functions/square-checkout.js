@@ -72,9 +72,9 @@ exports.handler = async (event) => {
         const orderId = orderData.order.id;
         console.log("✅ Order Created:", orderId);
 
-        // ✅ Step 2: Create a Checkout Session from the Order
+        // ✅ Step 2: Create a Checkout Session (Fixed for Sandbox)
         console.log("🚀 Creating Square Checkout...");
-        const checkoutResponse = await fetch(`https://connect.squareupsandbox.com/v2/checkout/payment-links`, {
+        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/checkout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -84,7 +84,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 idempotency_key: new Date().getTime().toString(),
                 order_id: orderId,
-                redirect_url: "https://quantasphere.netlify.app/products"
+                redirect_url: "https://quantasphere.netlify.app/products/"
             })
         });
 
@@ -103,7 +103,7 @@ exports.handler = async (event) => {
             };
         }
 
-        if (!checkoutResponse.ok || !checkoutData.payment_link) {
+        if (!checkoutResponse.ok || !checkoutData.checkout) {
             console.error("❌ Square Checkout API Error:", checkoutData);
             return { 
                 statusCode: 500, 
@@ -111,13 +111,13 @@ exports.handler = async (event) => {
             };
         }
 
-        console.log("✅ Checkout Created:", checkoutData.payment_link.url);
+        console.log("✅ Checkout Created:", checkoutData.checkout.checkout_page_url);
 
         return { 
             statusCode: 200,
             body: JSON.stringify({ 
                 success: true, 
-                checkoutUrl: checkoutData.payment_link.url
+                checkoutUrl: checkoutData.checkout.checkout_page_url
             }) 
         };
 
