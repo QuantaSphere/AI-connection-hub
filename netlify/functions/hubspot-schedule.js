@@ -106,9 +106,6 @@ exports.handler = async (event) => {
                     hs_meeting_title: "Smart Meeting",  // ✅ REQUIRED: Title of meeting
                     hs_meeting_start_time: startTime.toISOString(),  // ✅ REQUIRED: Start time
                     hs_meeting_end_time: endTime.toISOString(),  // ✅ REQUIRED: End time
-                    hs_meeting_duration: 1800,  // ✅ Duration in SECONDS (30 min = 1800 sec)
-                    hs_meeting_location: "Virtual",  // ✅ REQUIRED: Can be "Virtual" or "In Person"
-                    hs_meeting_attendees: contactId.toString(),  // ✅ REQUIRED: Comma-separated string of attendee IDs
                     hs_timestamp: startTimestamp  // ✅ REQUIRED: Meeting start time in UNIX timestamp
                 },
                 associations: [
