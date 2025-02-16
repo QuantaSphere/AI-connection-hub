@@ -147,7 +147,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ 
                 success: true, 
                 data: result,
-                meetingLink: "https://meetings.hubspot.com/your-meeting" 
+                meetingLink: "https://meetings-na2.hubspot.com/yawdie" 
             }) 
         };
 
