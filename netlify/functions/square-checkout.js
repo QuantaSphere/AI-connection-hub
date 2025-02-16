@@ -25,7 +25,7 @@ exports.handler = async (event) => {
         console.log(`🔍 Creating Checkout for: ${productName} - $${productPrice}`);
 
         // ✅ Ensure all necessary environment variables exist
-        if (!process.env.SQUARE_ACCESS_TOKEN || !process.env.SQUARE_LOCATION_ID || !process.env.SQUARE_APPLICATION_ID) {
+        if (!process.env.SQUARE_ACCESS_TOKEN || !process.env.SQUARE_LOCATION_ID) {
             console.error("❌ Missing Square API credentials in environment variables.");
             return {
                 statusCode: 500,
@@ -46,6 +46,7 @@ exports.handler = async (event) => {
                 idempotency_key: new Date().getTime().toString(),
                 order: {
                     location_id: process.env.SQUARE_LOCATION_ID,
+                    reference_id: "ORDER-" + new Date().getTime(),
                     line_items: [
                         {
                             name: productName,
@@ -72,9 +73,9 @@ exports.handler = async (event) => {
         const orderId = orderData.order.id;
         console.log("✅ Order Created:", orderId);
 
-        // ✅ Step 2: Create a Checkout Session for Payment (🔧 FIXED ENDPOINT!)
+        // ✅ Step 2: Create a Checkout Session (🔧 FIXED ENDPOINT!)
         console.log("🚀 Creating Square Checkout...");
-        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/checkout/orders", {
+        const checkoutResponse = await fetch("https://connect.squareupsandbox.com/v2/checkout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
