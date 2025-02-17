@@ -240,45 +240,78 @@ body {
     max-width: 100%;
     display: block;
 }
-/* 🌟 Hero Image and Text Section (Safe Addition) */
-.hero-image-section {
+/* 🌟 Hero Content Section (Below Navbar & Scheduling Button) */
+.hero-content {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    background: linear-gradient(to right, #1a1a2e, #3d0099); /* Matches theme */
-    padding: 40px 20px;
-    margin-top: 50px; /* Adjust distance from scheduling button */
+    justify-content: space-between;
+    text-align: left;
+    background: linear-gradient(to right, #0d0d0d, #1a1a2e); /* Adjust to match theme */
+    padding: 50px 40px;
+    margin-top: 20px; /* Pushes it below horizontal nav */
     border-radius: 10px;
     box-shadow: 0px 0px 15px rgba(255, 64, 129, 0.4);
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.hero-image-section img {
-    width: 85%; /* Ensures a good size */
-    max-width: 900px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.hero-text {
-    margin-top: 20px;
-    color: white;
-}
-
+/* 🌟 Hero Text Styling (Matching Reference Image) */
 .hero-text h2 {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: #17ff72; /* ✅ Bright Green Like Reference Image */
+    font-family: 'Poppins', sans-serif; /* ✅ Close Match to Modern, Bold Fonts */
 }
 
 .hero-text p {
     font-size: 18px;
     opacity: 0.9;
-    max-width: 700px;
-    margin: auto;
+    max-width: 600px;
+    color: white; /* ✅ White Subtext Like Reference Image */
+    font-family: 'Poppins', sans-serif;
 }
+
+.hero-text p {
+    font-size: 18px;
+    opacity: 0.9;
+    max-width: 600px;
+}
+
+/* 🌟 Image on Right */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px; /* Adjusted to match size in example */
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 📱 Responsive Adjustments */
+@media screen and (max-width: 1024px) {
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .hero-image img {
+        max-width: 90%;
+        margin-top: 20px;
+    }
+}
+
 
 }
 
