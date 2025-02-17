@@ -240,6 +240,45 @@ body {
     max-width: 100%;
     display: block;
 }
+/* 🌟 Hero Image and Text Section (Safe Addition) */
+.hero-image-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: linear-gradient(to right, #1a1a2e, #3d0099); /* Matches theme */
+    padding: 40px 20px;
+    margin-top: 50px; /* Adjust distance from scheduling button */
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(255, 64, 129, 0.4);
+}
+
+.hero-image-section img {
+    width: 85%; /* Ensures a good size */
+    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hero-text {
+    margin-top: 20px;
+    color: white;
+}
+
+.hero-text h2 {
+    font-size: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-text p {
+    font-size: 18px;
+    opacity: 0.9;
+    max-width: 700px;
+    margin: auto;
+}
 
 }
 
