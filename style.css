@@ -2,7 +2,7 @@
 body {
     background-color: #0d0d0d;
     color: #ffffff;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif; /* ✅ Updated Font */
     margin: 0;
     padding: 0;
     position: relative;
@@ -71,22 +71,59 @@ body {
     color: #ff4081;
 }
 
-/* 🎉 Hero Section */
-.hero-section {
-    text-align: center;
-    padding: 50px 100px;
-    max-width: 800px;
-    margin: auto;
+/* 🎉 Hero Content Section (Below Navigation & Scheduling Button) */
+.hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    background: linear-gradient(to right, #0d0d0d, #1a1a2e);
+    padding: 50px 40px;
+    margin-top: 20px; /* Pushes it below the navbar */
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(255, 64, 129, 0.4);
+    max-width: 1200px; /* ✅ Ensures proper layout */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.hero-section h1 {
-    font-size: 40px;
+/* 🌟 Hero Text Styling */
+.hero-text {
+    flex: 1; /* ✅ Allows text to take space */
+    max-width: 50%; /* ✅ Prevents text from shrinking too much */
+    color: #17ff72; /* ✅ Bright Green Like Reference Image */
     font-weight: bold;
+    padding-right: 20px; /* ✅ Adds spacing between text and image */
 }
 
-.hero-section p {
+.hero-text h2 {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.hero-text p {
     font-size: 18px;
     opacity: 0.9;
+    max-width: 600px;
+    color: white; /* ✅ White subtext like reference */
+}
+
+/* 🌟 Hero Image (Right Side) */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px; /* ✅ Matches reference size */
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* 📅 Scheduling Button (Dropdown Behavior) */
@@ -161,23 +198,6 @@ body {
     right: 20px;
     transition: background 0.3s;
 }
-/* 💡 AI Chat Button */
-#openChat {
-    background: #ff4081;
-    color: white;
-    font-size: 18px;
-    padding: 12px 20px;
-    border-radius: 25px;
-    box-shadow: 0px 4px 8px rgba(255, 64, 129, 0.3);
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    transition: background 0.3s;
-}
-
-#openChat:hover {
-    background: #ff669a;
-}
 
 /* 🗨️ Chat Window */
 .chat-box {
@@ -199,111 +219,16 @@ body {
     font-weight: bold;
 }
 
-#openChat:hover {
-    background: #ff669a;
-}
-
-/* 📱 Mobile & Desktop Adjustments - Align Reclaim Button Behavior */
-@media screen and (max-width: 1024px) {
-    .horizontal-nav {
-        flex-direction: column;
-        align-items: center;
-    }
-    .schedule-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    #scheduleButton {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-    #scheduleForm {
-        width: 90%;
-        position: relative;
-        max-width: 400px;
-    }
-    
-    /* More Compact Reclaim Scheduling Dropdown on Desktop & Mobile */
-    .schedule-container.open #scheduleForm {
-        box-shadow: none;
-        margin-top: 5px;
-        display: block;
-    }
-    
-    /* Move Chat Button Down if Scheduling Form is Open */
-    .schedule-container.open + #openChat {
-        bottom: 90px;
-    }
-    /* ✅ Navbar Logo Styling */
-.navbar-brand img.logo {
-    height: 50px; /* Adjust height as needed */
-    max-width: 100%;
-    display: block;
-}
-/* 🌟 Hero Content Section (Below Navbar & Scheduling Button) */
-.hero-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    text-align: left;
-    background: linear-gradient(to right, #0d0d0d, #1a1a2e); /* Adjust to match theme */
-    padding: 50px 40px;
-    margin-top: 20px; /* Pushes it below horizontal nav */
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(255, 64, 129, 0.4);
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* 🌟 Hero Text Styling (Matching Reference Image) */
-.hero-text h2 {
-    font-size: 32px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    color: #17ff72; /* ✅ Bright Green Like Reference Image */
-    font-family: 'Poppins', sans-serif; /* ✅ Close Match to Modern, Bold Fonts */
-}
-
-.hero-text p {
-    font-size: 18px;
-    opacity: 0.9;
-    max-width: 600px;
-    color: white; /* ✅ White Subtext Like Reference Image */
-    font-family: 'Poppins', sans-serif;
-}
-
-.hero-text p {
-    font-size: 18px;
-    opacity: 0.9;
-    max-width: 600px;
-}
-
-/* 🌟 Image on Right */
-.hero-image {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.hero-image img {
-    width: 100%;
-    max-width: 500px; /* Adjusted to match size in example */
-    border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* 📱 Responsive Adjustments */
+/* 📱 Mobile & Desktop Adjustments */
 @media screen and (max-width: 1024px) {
     .hero-content {
-        flex-direction: column;
+        flex-direction: column; /* ✅ Stack text and image on mobile */
         text-align: center;
     }
 
     .hero-text {
         max-width: 100%;
+        padding-right: 0; /* ✅ Remove extra spacing */
     }
 
     .hero-image img {
@@ -311,7 +236,3 @@ body {
         margin-top: 20px;
     }
 }
-
-
-}
-
