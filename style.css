@@ -236,7 +236,7 @@ body {
     }
     /* ✅ Navbar Logo Styling */
 .navbar-brand img.logo {
-    height: 25px; /* Adjust height as needed */
+    height: 50px; /* Adjust height as needed */
     max-width: 100%;
     display: block;
 }
